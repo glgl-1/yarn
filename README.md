@@ -1,7 +1,33 @@
-# yarn
+# Yarn Manager App
+A web application for managing knitting materials like yarn and needles.
 
-2024-01-14
+## Project Status
+- Start Date: 2025-04-01
+- Last Updated: 2025-04-06
 
-Flutter & Hive local DB
+### Today's Update
+- Completed ERD design for database structure.
+- Added ERD screenshot to README.
 
-내가 보유한 털실과 바늘 및 진행중인 뜨게질 상황을 확인하고 관리할수 있는 앱
+## Table of Contents
+- [Overview](#overview)
+- [Features](#features)
+- [Technologies Used](#technologies-used)
+- [ERD Design](#erd-design)
+
+## Overview
+Yarn Manager App is designed to help knitting enthusiasts manage their yarn inventory and track projects efficiently.
+
+## Features
+- Add and manage yarn and needles inventory.
+- Track projects with progress updates.
+- View required materials for each pattern.
+
+## Technologies Used
+Flutter & SQLite
+
+## ERD Design
+Below is the finalized ERD design for the database structure:
+
+![ERD Design](screenshots/ERD.png)
+![ERR Design](screenshots/EER.png)
