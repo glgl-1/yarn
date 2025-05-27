@@ -34,10 +34,26 @@ dependencies:
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.8
+  # GetX
+  get: ^4.7.2
+  # lottie
+  lottie: ^3.3.1
+  # imagePicker
+  image_picker: ^1.1.2
+  
+  # Hive Community Edition (데이터베이스)
+  hive_ce: ^2.11.3
+  # Hive Flutter 연동 (필수)
+  hive_ce_flutter: ^2.3.1
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  
+  # Hive CE 어댑터 자동 생성기
+  hive_ce_generator: ^1.9.1
+  # 코드 자동 생성 도구 (build_runner)
+  build_runner: ^2.4.15
 
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is
@@ -58,8 +74,8 @@ flutter:
   uses-material-design: true
 
   # To add assets to your application, add an assets section, like this:
-  # assets:
-  #   - images/a_dot_burr.jpeg
+  assets:
+    - images/
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see
