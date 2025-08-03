@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:yarn/model/project.dart';
+import 'package:yarn/view/myinventory.dart';
+import 'package:yarn/view/myproject.dart';
 import 'package:yarn/vm/mybottomtapbar.dart';
 
 class Home extends StatefulWidget {
@@ -49,8 +53,26 @@ class _HomeState extends State<Home> {
     );
   }
 
+
+
+//--------- Functions ---------
+
   _onTabTapped(int index){
     _selectedIndex = index;
-    //
+    switch(index){
+      case 0: // 홈
+      Get.offAll(Home());
+        break;
+      case 1: // 프로젝트
+      Get.to(Myproject());
+        break;
+      case 2: // 재고
+      Get.to(Myinventory());
+      case 3: // 캘린더
+      case 4: // 도안
+    }
+    setState(() {});
   }
+
+
 }// END
