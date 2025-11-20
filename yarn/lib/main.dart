@@ -6,8 +6,8 @@ import 'package:yarn/model/needle.dart';
 import 'package:yarn/model/project.dart';
 import 'package:yarn/model/yarn.dart';
 import 'package:yarn/view/home.dart';
-// import 'package:yarn/view/splashScrrenPage.dart';
 import 'package:yarn/adapters/hive_registrar.g.dart';
+import 'package:yarn/vm/ui_helper.dart';
 
 void main() async {
   await Hive.initFlutter();

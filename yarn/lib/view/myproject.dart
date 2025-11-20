@@ -2,17 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:hive_ce/hive.dart';
 import 'package:hive_ce_flutter/hive_flutter.dart';
 import 'package:yarn/model/yarn.dart';
-import 'package:image_picker/image_picker.dart';
 
 class Myproject extends StatefulWidget {
   const Myproject({Key? key}) : super(key: key);
 
   @override
-  State<Myproject> createState() => _ProjectCreatePageState();
+  State<Myproject> createState() => _MyprojectState();
 }
 
-class _ProjectCreatePageState extends State<Myproject> {
+class _MyprojectState extends State<Myproject> {
   final _formKey = GlobalKey<FormState>();
+
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _descController = TextEditingController();
   DateTime? _startDate;
@@ -24,10 +24,29 @@ class _ProjectCreatePageState extends State<Myproject> {
 
   int? selectedNeedleType; // 0: 대바늘, 1: 코바늘
 
+  bool _isButtonEnabled = false;
+
   @override
   void initState() {
     super.initState();
     yarnBox = Hive.box<Yarn>('yarn');
+    _nameController.addListener(_checkButtonEnable);
+  }
+
+
+  @override
+  void dispose() {
+    _nameController.dispose();
+    _descController.dispose();
+    _searchController.dispose();
+    super.dispose();
+  }
+
+
+  void _checkButtonEnable() {
+    setState(() {
+      _isButtonEnabled = _nameController.text.trim().isNotEmpty;
+    });
   }
 
   Future<void> _pickDate(bool isStart) async {
@@ -51,7 +70,16 @@ class _ProjectCreatePageState extends State<Myproject> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('프로젝트 정보')),
+      appBar: AppBar(
+        title: const Text('새 프로젝트'),
+        automaticallyImplyLeading: false,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.close),
+            onPressed: () => Navigator.pop(context),
+          ),
+        ],
+      ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(20),
         child: Form(
@@ -59,7 +87,8 @@ class _ProjectCreatePageState extends State<Myproject> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text('프로젝트명', style: TextStyle(fontWeight: FontWeight.bold)),
+              const Text('프로젝트 정보', style: TextStyle(fontWeight: FontWeight.bold)),
+              const SizedBox(height: 10),
               TextFormField(
                 controller: _nameController,
                 decoration: const InputDecoration(
@@ -69,7 +98,6 @@ class _ProjectCreatePageState extends State<Myproject> {
                 validator: (v) => v == null || v.isEmpty ? '필수 입력' : null,
               ),
               const SizedBox(height: 16),
-              const Text('설명', style: TextStyle(fontWeight: FontWeight.bold)),
               TextFormField(
                 controller: _descController,
                 maxLines: 3,
@@ -149,11 +177,15 @@ class _ProjectCreatePageState extends State<Myproject> {
                 builder: (context, Box<Yarn> box, _) {
                   final allYarns = box.values.toList();
                   final allKeys = box.keys.toList();
-                  final search = _searchController.text.trim();
+                  final search = _searchController.text.trim().toLowerCase();
                   final filtered = search.isEmpty
                       ? List.generate(allYarns.length, (i) => i)
                       : List.generate(allYarns.length, (i) => i)
-                          .where((i) => allYarns[i].name.contains(search) || allYarns[i].brand.contains(search))
+                          .where(
+                            (i) =>
+                                allYarns[i].name.toLowerCase().contains(search) ||
+                                allYarns[i].brand.toLowerCase().contains(search),
+                          )
                           .toList();
 
                   if (allYarns.isEmpty) {
@@ -172,7 +204,10 @@ class _ProjectCreatePageState extends State<Myproject> {
                           // leading: (yarn.imagePath != null && yarn.imagePath.isNotEmpty)
                           //     ? Image.network(yarn.imagePath, width: 40, height: 40, fit: BoxFit.cover)
                           //     : const Icon(Icons.image_not_supported),
-                          title: Text(yarn.name, style: const TextStyle(fontWeight: FontWeight.bold)),
+                          title: Text(
+                            yarn.name,
+                            style: const TextStyle(fontWeight: FontWeight.bold),
+                          ),
                           subtitle: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
@@ -232,31 +267,32 @@ class _ProjectCreatePageState extends State<Myproject> {
                   ),
                 ],
               ),
-              const SizedBox(height: 24),
-              SizedBox(
-                width: double.infinity,
-                child: ElevatedButton(
-                  onPressed: () {
-                    // 프로젝트 생성 로직 (폼 검증 등)
-                    if (_formKey.currentState!.validate()) {
-                      // Hive에 저장 등
-                    }
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.blue,
-                    padding: const EdgeInsets.symmetric(vertical: 16),
-                  ),
-                  child: const Text('프로젝트 만들기', style: TextStyle(fontSize: 16)),
-                ),
-              ),
+              const SizedBox(height: 80), // 여유 공간
             ],
           ),
         ),
       ),
+      bottomNavigationBar: Padding(
+        padding: const EdgeInsets.all(16),
+        child: ElevatedButton(
+          onPressed: _isButtonEnabled
+              ? () {
+                  if (_formKey.currentState!.validate()) {
+                    // Hive에 저장 등 프로젝트 생성 로직 구현
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text('프로젝트가 생성되었습니다!')),
+                    );
+                    // 필요한 동작 추가
+                  }
+                }
+              : null,
+          style: ElevatedButton.styleFrom(
+            backgroundColor: Colors.blue,
+            padding: const EdgeInsets.symmetric(vertical: 16),
+          ),
+          child: const Text('프로젝트 만들기', style: TextStyle(fontSize: 16)),
+        ),
+      ),
     );
   }
-
-
-
-  
-}// END
+}
